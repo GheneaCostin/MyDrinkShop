@@ -10,15 +10,24 @@ public class Order implements Serializable {
     private List<OrderItem> items;
     private double totalPrice;
 
+
     public Order(int id) {
         this.id = id;
         this.items = new ArrayList<>();
         this.totalPrice = 0.0;
     }
 
+
     public Order(int id, List<OrderItem> items, double totalPrice) {
         this.id = id;
-        this.items = new ArrayList<>(items);
+
+
+        if (items == null) {
+            this.items = null;
+        } else {
+            this.items = new ArrayList<>(items);
+        }
+
         this.totalPrice = totalPrice;
     }
 

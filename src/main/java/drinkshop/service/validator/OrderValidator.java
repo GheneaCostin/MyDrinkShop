@@ -5,11 +5,20 @@ import drinkshop.domain.OrderItem;
 
 public class OrderValidator implements Validator<Order> {
 
-    private final OrderItemValidator itemValidator = new OrderItemValidator();
+    private Validator<OrderItem> itemValidator;
+
+
+    public OrderValidator(Validator<OrderItem> itemValidator) {
+        this.itemValidator = itemValidator;
+    }
+
+
+    public OrderValidator() {
+        this.itemValidator = new OrderItemValidator();
+    }
 
     @Override
     public void validate(Order order) {
-
         String errors = "";
 
         if (order.getId() <= 0)
@@ -18,11 +27,14 @@ public class OrderValidator implements Validator<Order> {
         if (order.getItems() == null || order.getItems().isEmpty())
             errors += "Comanda fara produse!\n";
 
-        for (OrderItem item : order.getItems()) {
-            try {
-                itemValidator.validate(item);
-            } catch (ValidationException e) {
-                errors += e.getMessage();
+
+        if (order.getItems() != null) {
+            for (OrderItem item : order.getItems()) {
+                try {
+                    itemValidator.validate(item);
+                } catch (ValidationException e) {
+                    errors += e.getMessage();
+                }
             }
         }
 
